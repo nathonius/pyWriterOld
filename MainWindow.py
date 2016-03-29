@@ -1,7 +1,11 @@
-from TextPane import *
-from ChapterPane import *
-from ScenePane import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 
+
+"""
+Main Pane Classes
+"""
 class MainPane(QWidget):
     def __init__(self):
         super().__init__()
@@ -47,3 +51,43 @@ class MainPane(QWidget):
         help = menubar.addMenu("Help")
 
         return menubar
+
+
+"""
+Text Pane Classes
+"""
+class TextPane(QVBoxLayout):
+    def __init__(self):
+        super().__init__()
+        self.initFormatbar()
+        self.initUI()
+
+    def initUI(self):
+        text = TextField()
+        self.addWidget(text, 10)
+
+    def initFormatbar(self):
+        bar = QToolBar("Format")
+
+        self.addWidget(bar)
+
+
+class TextField(QTextEdit):
+    def __init__(self):
+        super().__init__()
+
+
+"""
+Scene Pane Classes
+"""
+class ScenePane(QListWidget):
+    def __init__(self):
+        super().__init__()
+
+
+"""
+Chapter Pane Classes
+"""
+class ChapterPane(QListWidget):
+    def __init__(self):
+        super().__init__()
