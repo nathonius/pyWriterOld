@@ -4,7 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 
-class SceneEditor(QMainWindow):
+class SceneEditor(QWidget):
     def __init__(self, filepath=None):
         super().__init__()
 
@@ -14,12 +14,84 @@ class SceneEditor(QMainWindow):
 
     def initUI(self):
         self.setGeometry(100, 100, 1030, 800)
+
+        # Set window title to scene name
         self.setWindowTitle("Scene Editor")
 
-        self.initFormatbar()
+        # Set up the menubar
+        self.menubar = QMenuBar(self)
+        self.initMenubar()
 
-        self.text = QTextEdit(self)
-        self.setCentralWidget(self.text)
+        # Create the main tab pane
+        self.tabs = QTabWidget(self)
+        self.initTabs()
+
+        # Create the chapter select and save pane
+        self.chapterSelect = QWidget(self)
+        self.initChapterSelect()
+
+        # Add all widgets
+        layout = QVBoxLayout(self)
+        layout.addWidget(self.menubar)
+        layout.addWidget(self.tabs)
+        layout.addWidget(self.chapterSelect)
+        self.setLayout(layout)
+
+    def initMenubar(self):
+        # Add menus
+        self.menubar.addMenu("File")
+        self.menubar.addMenu("Scene")
+        self.menubar.addMenu("Edit")
+        self.menubar.addMenu("Spelling")
+        self.menubar.addMenu("Settings")
+        self.menubar.addMenu("Help")
+
+    def initTabs(self):
+        # Create each tab
+        contentTab = QWidget(self.tabs)
+        detailsTab = QWidget(self.tabs)
+        charactersTab = QWidget(self.tabs)
+        locationsTab = QWidget(self.tabs)
+        itemsTab = QWidget(self.tabs)
+        notesTab = QWidget(self.tabs)
+        pictureTab = QWidget(self.tabs)
+        goalsTab = QWidget(self.tabs)
+        exportingTab = QWidget(self.tabs)
+        timeTab = QWidget(self.tabs)
+        ratingsTab = QWidget(self.tabs)
+
+        # Set up content tab
+        contentLayout = QVBoxLayout(contentTab)
+        self.formatbar = QToolBar("Format")
+        self.initFormatbar()
+        self.sceneText = QTextEdit(contentTab)
+        contentLayout.addWidget(self.formatbar)
+        contentLayout.addWidget(self.sceneText)
+        contentTab.setLayout(contentLayout)
+
+        # Set up details tab
+        detailsLayout = QVBoxLayout(detailsTab)
+        detailsText = QTextEdit(detailsTab)
+        detailsLayout.addWidget(detailsText)
+        detailsTab.setLayout(detailsLayout)
+
+        # Set up ...
+
+        # Add tabs
+        self.tabs.addTab(contentTab, "Content")
+        self.tabs.addTab(detailsTab, "Details")
+        self.tabs.addTab(charactersTab, "Characters")
+        self.tabs.addTab(locationsTab, "Locations")
+        self.tabs.addTab(itemsTab, "Items")
+        self.tabs.addTab(notesTab, "Notes")
+        self.tabs.addTab(pictureTab, "Picture")
+        self.tabs.addTab(goalsTab, "Goals")
+        self.tabs.addTab(exportingTab, "Exporting")
+        self.tabs.addTab(timeTab, "Time")
+        self.tabs.addTab(ratingsTab, "Ratings")
+
+    def initChapterSelect(self):
+        pass
 
     def initFormatbar(self):
         # Create Format Actions
@@ -55,9 +127,6 @@ class SceneEditor(QMainWindow):
         dedentAction = QAction("Dedent", self)
         dedentAction.triggered.connect(self.dedent)
 
-        # Create/Add Tooblar
-        self.formatbar = self.addToolBar("Format")
-
         # Add Format Actions
         self.formatbar.addAction(boldAction)
         self.formatbar.addAction(italicAction)
@@ -77,47 +146,46 @@ class SceneEditor(QMainWindow):
         self.formatbar.addAction(dedentAction)
         self.formatbar.addSeparator()
 
-
     # Formatting Functions
     def bold(self):
-        if self.text.fontWeight() == QFont.Bold:
-            self.text.setFontWeight(QFont.Normal)
+        if self.sceneText.fontWeight() == QFont.Bold:
+            self.sceneText.setFontWeight(QFont.Normal)
         else:
-            self.text.setFontWeight(QFont.Bold)
+            self.sceneText.setFontWeight(QFont.Bold)
 
     def italic(self):
-        state = self.text.fontItalic()
-        self.text.setFontItalic(not state)
+        state = self.sceneText.fontItalic()
+        self.sceneText.setFontItalic(not state)
 
     def underline(self):
-        state = self.text.fontUnderline()
-        self.text.setFontUnderline(not state)
+        state = self.sceneText.fontUnderline()
+        self.sceneText.setFontUnderline(not state)
 
     def strike(self):
         # Get current format
-        fmt = self.text.currentCharFormat()
+        fmt = self.sceneText.currentCharFormat()
         # Invert strike state
         fmt.setFontStrikeOut(not fmt.fontStrikeOut())
         # Set the format of text
-        self.text.setCurrentCharFormat(fmt)
+        self.sceneText.setCurrentCharFormat(fmt)
 
     # Alignment Functions
     def alignLeft(self):
-        self.text.setAlignment(Qt.AlignLeft)
+        self.sceneText.setAlignment(Qt.AlignLeft)
 
     def alignCenter(self):
-        self.text.setAlignment(Qt.AlignCenter)
+        self.sceneText.setAlignment(Qt.AlignCenter)
 
     def alignRight(self):
-        self.text.setAlignment(Qt.AlignRight)
+        self.sceneText.setAlignment(Qt.AlignRight)
 
     def alignJustify(self):
-        self.text.setAlignment(Qt.AlignJustify)
+        self.sceneText.setAlignment(Qt.AlignJustify)
 
     # Indent/Dedent Functions
     def indent(self, dedent=False):
         # Get the cursor
-        cursor = self.text.textCursor()
+        cursor = self.sceneText.textCursor()
 
         if cursor.hasSelection():
             # Get current line/block number
@@ -152,6 +220,7 @@ class SceneEditor(QMainWindow):
 
         else:
             if dedent:
+                cursor.movePosition(QTextCursor.StartOfLine)
                 # Get the current line
                 line = cursor.block().text()
                 # If the line starts with a tab, remove it.
