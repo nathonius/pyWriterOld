@@ -9,35 +9,52 @@ Main Pane Classes
 class MainPane(QWidget):
     def __init__(self):
         super().__init__()
-        mainLayout = QVBoxLayout()
-        self.initUI(mainLayout)
-        self.setLayout(mainLayout)
+        self.initUI()
 
-    def initUI(self, layout):
-        # Instatiate
+    def initUI(self):
+        # Create layout, menubar, main widget
+        layout = QVBoxLayout()
+        menubar = self.initMenubar()
+        layout.addWidget(menubar)
+        mainWidget = QWidget()
+
+        # Set up mainWidget
+        stretch = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        mainWidget.setSizePolicy(stretch)
+
+        # Instatiate Panes
         top = ScenePane()
         text = TextPane()
         left = ChapterPane()
-        menubar = self.initMenubar()
-        layout.addWidget(menubar)
 
-        # Create hbox layout for top and bottom panes
+        # Create vbox layout for top and bottom panes
         vbox = QVBoxLayout()
-        vbox.addWidget(top, 5)
-        vbox.addLayout(text, 5)
+        vboxSplitter = QSplitter(Qt.Vertical)
+        vboxSplitter.addWidget(top)
+        vboxSplitter.addWidget(text)
+        vbox.addWidget(vboxSplitter)
+        right = QWidget()
+        right.setLayout(vbox)
 
-        # Create vbox layout to hold left pane and right hbox
+        # Create hbox layout to hold left pane and right vbox
         hbox = QHBoxLayout()
 
         hbox.setAlignment(Qt.AlignLeft)
-        hbox.addWidget(left, 3)
-        hbox.addLayout(vbox, 7)
+        hboxSplitter = QSplitter(Qt.Horizontal)
+        hboxSplitter.addWidget(left)
+        hboxSplitter.addWidget(right)
+        hboxSplitter.setStretchFactor(0, 0)
+        hboxSplitter.setStretchFactor(1, 1)
+        hbox.addWidget(hboxSplitter)
 
-        layout.addLayout(hbox)
+        mainWidget.setLayout(hbox)
+        layout.addWidget(mainWidget)
+        self.setLayout(layout)
 
     def initMenubar(self):
         menubar = QMenuBar()
 
+        # Add menus
         file = menubar.addMenu("File")
         print = menubar.addMenu("Print")
         search = menubar.addMenu("Search")
@@ -50,26 +67,26 @@ class MainPane(QWidget):
         localise = menubar.addMenu("Localise")
         help = menubar.addMenu("Help")
 
+        #Set size policy
+        stretch = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        menubar.setSizePolicy(stretch)
+
         return menubar
 
 
 """
 Text Pane Classes
 """
-class TextPane(QVBoxLayout):
+class TextPane(QWidget):
     def __init__(self):
         super().__init__()
-        self.initFormatbar()
         self.initUI()
 
     def initUI(self):
+        vbox = QVBoxLayout()
         text = TextField()
-        self.addWidget(text, 10)
-
-    def initFormatbar(self):
-        bar = QToolBar("Format")
-
-        self.addWidget(bar)
+        vbox.addWidget(text, 10)
+        self.setLayout(vbox)
 
 
 class TextField(QTextEdit):
@@ -80,9 +97,16 @@ class TextField(QTextEdit):
 """
 Scene Pane Classes
 """
-class ScenePane(QListWidget):
+class ScenePane(QWidget):
     def __init__(self):
         super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        vbox = QVBoxLayout()
+        sceneList = QListWidget()
+        vbox.addWidget(sceneList)
+        self.setLayout(vbox)
 
 
 """

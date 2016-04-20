@@ -12,36 +12,36 @@ class FormatBar(QToolBar):
 
     def initFormatbar(self):
         # Create Format Actions
-        boldAction = QAction("Bold", self)
+        boldAction = QAction(QIcon("icons/bold.png"), "Bold", self)
         boldAction.triggered.connect(self.bold)
 
-        italicAction = QAction("Italic", self)
+        italicAction = QAction(QIcon("icons/italic.png"), "Italic", self)
         italicAction.triggered.connect(self.italic)
 
-        underlineAction = QAction("Underline", self)
+        underlineAction = QAction(QIcon("icons/underline.png"), "Underline", self)
         underlineAction.triggered.connect(self.underline)
 
-        strikeAction = QAction("Strike-Through", self)
+        strikeAction = QAction(QIcon("icons/strike.png"), "Strike-Through", self)
         strikeAction.triggered.connect(self.strike)
 
         # Create Alignment Actions
-        alignLeftAction = QAction("Align Left", self)
+        alignLeftAction = QAction(QIcon("icons/alignLeft.png"), "Align Left", self)
         alignLeftAction.triggered.connect(self.alignLeft)
 
-        alignCenterAction = QAction("Align Center", self)
+        alignCenterAction = QAction(QIcon("icons/alignCenter.png"), "Align Center", self)
         alignCenterAction.triggered.connect(self.alignCenter)
 
-        alignRightAction = QAction("Align Right", self)
+        alignRightAction = QAction(QIcon("icons/alignRight.png"), "Align Right", self)
         alignRightAction.triggered.connect(self.alignRight)
 
-        alignJustifyAction = QAction("Align Justify", self)
+        alignJustifyAction = QAction(QIcon("icons/alignJustify.png"), "Align Justify", self)
         alignJustifyAction.triggered.connect(self.alignJustify)
 
         # Create Indent/Dedent Actions
-        indentAction = QAction("Indent", self)
+        indentAction = QAction(QIcon("icons/indent.png"), "Indent", self)
         indentAction.triggered.connect(self.indent)
 
-        dedentAction = QAction("Dedent", self)
+        dedentAction = QAction(QIcon("icons/dedent.png"), "Dedent", self)
         dedentAction.triggered.connect(self.dedent)
 
         # Add Format Actions
@@ -105,11 +105,18 @@ class FormatBar(QToolBar):
         cursor = self.sceneText.textCursor()
 
         if cursor.hasSelection():
-            # Get current line/block number
+            atStart = True
+            if cursor.position() is cursor.selectionEnd():
+                atStart = False
+            # Get first line/block number
             block = cursor.blockNumber()
             # Figure out how many lines are in selection
-            cursor.setPosition(cursor.selectionEnd())
-            lines = cursor.blockNumber() - block
+            if atStart:
+                cursor.setPosition(cursor.selectionEnd())
+                lines = cursor.blockNumber() - block
+            else:
+                cursor.setPosition(cursor.selectionStart())
+                lines = block - cursor.blockNumber()
 
             # Indent/Dedent each line
             for i in range(lines+1):
@@ -133,7 +140,10 @@ class FormatBar(QToolBar):
                     cursor.insertText("\t")
 
                 # Move to next line
-                cursor.movePosition(QTextCursor.Up)
+                if atStart:
+                    cursor.movePosition(QTextCursor.Up)
+                else:
+                    cursor.movePosition(QTextCursor.Down)
 
         else:
             if dedent:

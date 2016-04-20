@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from SceneEditorFormatBar import FormatBar
+import os.path
 
 
 class Tabs(QTabWidget):
@@ -52,3 +53,11 @@ class Tabs(QTabWidget):
         self.addTab(exportingTab, "Exporting")
         self.addTab(timeTab, "Time")
         self.addTab(ratingsTab, "Ratings")
+
+    def openFile(self, filepath):
+        """Called from SceneEditor every time a new scene is selected in the bottom select pane."""
+        if os.path.isfile(filepath):
+            with open(filepath, "rt") as fp:
+                self.sceneText.setText(fp.read())
+        else:
+            raise(IOError)

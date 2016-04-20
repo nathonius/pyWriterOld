@@ -1,0 +1,104 @@
+{
+  "project": {
+    "title": "title",
+    "description": "desc",
+    "tags": ["tag1"],
+    "author": "author name",
+    "author_bio": "bio",
+    "deadlines": [
+      {
+        "start": "startdate",
+        "end": "enddate",
+        "name": "deadline name"
+      },
+      {
+        "start": "startdate",
+        "end": "enddate",
+        "name": "deadline name"
+      }
+    ]
+  },
+  "locations": [
+    {
+      "title": "name of the place",
+      "shortname": "aka",
+      "description": "desc",
+      "tags": ["tag1"]
+    },
+    {
+      "title": "name of the place",
+      "shortname": "aka",
+      "description": "desc",
+      "tags": ["tag1"]
+    }
+  ],
+  "characters": [
+    {
+      "title": "full name",
+      "shortname": "aka",
+      "major": false,
+      "description": "desc",
+      "tags": ["tag1"],
+      "bio": "bio",
+      "notes": "notes",
+      "goals": "goals"
+    },
+    {
+      "title": "full name",
+      "shortname": "aka",
+      "major": false,
+      "description": "desc",
+      "tags": ["tag1"],
+      "bio": "bio",
+      "notes": "notes",
+      "goals": "goals"
+    }
+  ],
+  "items": [
+    {
+      "title": "the item's name",
+      "shortname": "aka",
+      "description": "desc",
+      "tags": ["tag1"]
+    },
+    {
+      "title": "the item's name",
+      "shortname": "aka",
+      "description": "desc",
+      "tags": ["tag1"]
+    }
+  ],
+  "notes": [
+    {
+      "title": "the title of the note",
+      "note": "the note"
+    },
+    {
+      "title": "the title of the note",
+      "note": "the note"
+    }
+  ],
+  "scenes": [
+    {
+      "title": "title of the scene",
+      "viewpoint": "which character is this from? or none possibly",
+      "characters": [
+        "character1"
+      ],
+      "tags": [
+        "tag1"
+      ],
+      "locations": [
+        "location 1"
+      ],
+      "items": [
+        "item 1"
+      ],
+      "time": {
+        "begins": "when the scene begins",
+        "ends": "when it ends"
+      },
+      "file": "what file is the content of the scene stored in?"
+    }
+  ]
+}
